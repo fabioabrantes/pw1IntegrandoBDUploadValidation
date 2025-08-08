@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AppErrosCustom } from '../errors/appError';
+import { AppErrorsZod } from '../errors/appErrorsZod';
 
 
 export function exceptionsVerify(
@@ -13,6 +14,10 @@ export function exceptionsVerify(
     return;
   }
 
+  if (error instanceof AppErrorsZod) {
+    res.status(error.statusCode).json({ message: error.message });
+    return;
+  }
   res.status(500).json({
     status: "Error",
     message: "Internal server error or database error"

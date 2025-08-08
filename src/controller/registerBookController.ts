@@ -7,9 +7,6 @@ type ParamsBody = {
   title: string;
   descriptionType: string;
 };
-type Params = {
-  id: string;
-};
 
 class RegisterBookController {
   async handle(req: Request, res: Response) {
