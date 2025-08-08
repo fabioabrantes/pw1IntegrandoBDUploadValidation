@@ -8,17 +8,18 @@ export function validateZodUser(user: Omit<UserModel, "id">) {
 
   const userSchema = z.object({
     cpf: z
-      .string("campo deve ser obrigatório")
+      .string("campo deve ser obrigatório e deve ser texto")
       .regex(cpfRegex, "CPF formato inválido. digite aaa.aaa.aaa-aa"),
     name: z
-      .string("campo deve ser obrigatório")
+      .string("campo deve ser obrigatório e deve ser texto")
       .trim()
       .min(3, "Nome deve ter pelo menos 3 caracteres"),
     email: z.email("E-mail inválido"),
-    password: z
+    password: z.coerce
       .string("campo deve ser obrigatório")
       .min(6, "Senha deve ter pelo menos 6 caracteres"),
   });
+
   const result = userSchema.safeParse(user); // aqui tras todas as mensagens onde teve errors
 
   if (!result.error) {
@@ -30,26 +31,39 @@ export function validateZodUser(user: Omit<UserModel, "id">) {
   return { fieldErrors };
 }
 
-export function validateZodBook(user: Omit<BookModel, "id">) {
+export function validateZodBook(book: Omit<BookModel, "id">) {
   const registerBookSchema = z.object({
     author: z
       .string("error: campo obrigatório")
       .trim()
       .min(3, "error: Nome deve ter pelo menos 3 caracteres"),
-    title: z.string({ error: "Título é obrigatório" }),
-    descriptionType: z.string({ error: "Tipo de descrição é obrigatório" }),
-    userId: z.string({ error: "ID do usuário é obrigatório" }),
+    title: z
+      .string("Error: Título é obrigatório")
+      .trim()
+      .min(3, "error: Título deve ter pelo menos 1 caracteres"),
+    descriptionType: z
+      .string()
+      .trim()
+      .min(1, "A descrição não pode conter apenas espaços"),
+    userId: z
+      .string("ID do usuário é obrigatório")
+      .uuid("ID do usuário inválido"),
     ImagesBook: z
       .array(
         z.object({
-          pictureName: z.string({
-            error: "Nome da imagem é obrigatório",
-          }),
+          pictureName: z
+            .string("Nome da imagem é obrigatório")
+            .trim()
+            .regex(
+              /^[a-zA-Z0-9_-]+\.(jpg|jpeg|png)$/i,
+              "Error: O nome do arquivo  ou extensão inválidas (ex: fabio2_A.jpg, fabio2-A.png)"
+            ), //garantir também que o nome não tenha espaços ou caracteres inválidos
         })
       )
       .min(1, "Pelo menos uma imagem deve ser enviada"),
   });
-  const result = registerBookSchema.safeParse(user); // aqui tras todas as mensagens onde teve errors
+
+  const result = registerBookSchema.safeParse(book); // aqui tras todas as mensagens onde teve errors
 
   if (!result.error) {
     return;

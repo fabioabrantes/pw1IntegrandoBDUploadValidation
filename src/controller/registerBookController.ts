@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 
 import RegisterBookUseCase from "../core/book/usecases/registerBook";
+import { validateZodBook } from "../service/zodValidations";
+import { AppErrorsZod } from "../errors/appErrorsZod";
 
 type ParamsBody = {
   author: string;
@@ -24,6 +26,10 @@ class RegisterBookController {
       userId: id,
       ImagesBook: fileNames,
     };
+    const resultadoVal = validateZodBook(book);
+    if (resultadoVal) {
+      throw new AppErrorsZod(resultadoVal.fieldErrors, 400);
+    }
 
     const result = await RegisterBookUseCase.execute(book);
 
