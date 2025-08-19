@@ -14,7 +14,7 @@ type Params = {
 class RegisterUserController {
   async handle(req: Request, res: Response) {
     const { cpf, name, email, password } = req.body as Params;
-
+    console.log(process.env.DATABASE_URL)
     // validar os campos cpf, name e email usando a lib zod
     const resultValidation = validateZodUser({ cpf, name, email, password });
     if (resultValidation) {

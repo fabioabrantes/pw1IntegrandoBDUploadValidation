@@ -4,10 +4,18 @@ import { UserModel } from "../entity/User";
 
 class RegisterUserUseCase {
   async execute(user: Omit<UserModel, "id">) {
-    let userExist = await repositoryUserPrisma.findByCpf(user.cpf);
+    let userExistCpf = await repositoryUserPrisma.findByCpf(user.cpf);
+    if (userExistCpf !== null) {
+      throw new AppErrosCustom("Cliente já existe no banco com esse cpf", 400);
+    }
 
-    if (userExist !== null) {
-      throw new AppErrosCustom("Cliente já existe no banco", 400);
+    let userExistEmail = await repositoryUserPrisma.findByEmail(user.email);
+
+    if (userExistEmail !== null) {
+      throw new AppErrosCustom(
+        "Cliente já existe no banco com esse email",
+        400
+      );
     }
 
     const userBD = await repositoryUserPrisma.registerUser(user);
