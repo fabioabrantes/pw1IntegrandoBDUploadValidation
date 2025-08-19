@@ -52,31 +52,11 @@ Para iniciar o servidor em modo de desenvolvimento (com recarregamento automáti
 npm run dev
 ```
 
-Para compilar e iniciar o servidor em modo de produção:
-
-```sh
-npm run build
-npm start
-```
 
 O servidor estará disponível em `http://localhost:3000` (ou na porta definida no seu arquivo de configuração).
 
 ---
 
-## ⚙️ Como Usar
-
-Para testar o upload, envie uma requisição `POST` para o endpoint `/upload` com o `Content-Type` como `multipart/form-data`.
-
-- **Endpoint**: `POST /upload`
-- **Campo do arquivo**: `file` (ou o nome definido na sua configuração do Multer)
-
-Você pode usar ferramentas como Postman, Insomnia ou `curl` para enviar o arquivo.
-
-**Exemplo com `curl`:**
-
-```sh
-curl -X POST -F "file=@/caminho/para/seu/arquivo.png" http://localhost:3000/upload
-```
 
 ## 🛠️ Tecnologias Utilizadas
 
